@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ModularAds.Scripts.Core.Audio
+namespace ModularAudio.Scripts
 {
     [CreateAssetMenu(fileName = "AudioMixerChannelSO", menuName = "Scriptable Objects/AudioMixerChannelSO")]
     public class AudioMixerChannelSo : ScriptableObject

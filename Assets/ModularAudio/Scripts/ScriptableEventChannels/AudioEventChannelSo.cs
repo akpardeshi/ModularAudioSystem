@@ -1,13 +1,18 @@
 using System;
 using UnityEngine;
 
-namespace ModularAds.Core.Scripts.ScriptableEventChannels
+namespace ModularAudio.Scripts
 {
     [CreateAssetMenu(fileName = "AudioEventChannelSO", menuName = "Scriptable Objects/AudioEventChannelSO")]
     public class AudioEventChannelSo : ScriptableObject
     {
-        public Action<AudioClip> OnEventRaised;
-
+        private Action<AudioClip> _onEventRaised;
+        
+        public event Action<AudioClip> OnEventRaised
+        {
+            add    => _onEventRaised += value;
+            remove => _onEventRaised -= value;
+        }
         public void RaiseEvent(AudioClip clip)
         {
             if (clip == null)
@@ -16,7 +21,7 @@ namespace ModularAds.Core.Scripts.ScriptableEventChannels
                 return;
             }
 
-            OnEventRaised?.Invoke(clip);
+            _onEventRaised?.Invoke(clip);
         }
     }
 }

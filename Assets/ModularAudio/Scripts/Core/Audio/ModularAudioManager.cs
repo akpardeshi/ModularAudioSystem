@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using ModularAds.Core.Scripts.ScriptableEventChannels;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace ModularAds.Scripts.Core.Audio
+namespace ModularAudio.Scripts
 {
     public class ModularAudioManager : MonoBehaviour
     {
@@ -79,11 +78,12 @@ namespace ModularAds.Scripts.Core.Audio
             }
         }
 
-        void Start()
+        void Awake()
         {
             InitializeAudioChannels();
             Initialize();
-
+            SetVolume();
+            
             SetChannelVolume(AudioMixerNames.MasterVolume, InitialVolume);
             SetChannelVolume(AudioMixerNames.MusicVolume, InitialVolume);
             SetChannelVolume(AudioMixerNames.SfxVolume, InitialVolume);
@@ -126,7 +126,7 @@ namespace ModularAds.Scripts.Core.Audio
         {
             if (!musicSource)
             {
-                Debug.LogError($"[Audio] MusicSource missing: {musicSource != null}");
+                Debug.LogError($"[Audio] Music Source is not assigned in the Inspector.");
             }
             else
             {
@@ -136,7 +136,7 @@ namespace ModularAds.Scripts.Core.Audio
 
             if (!sfxSource)
             {
-                Debug.LogError($"[Audio] SfxSource missing: {sfxSource != null}");
+                Debug.LogError($"[Audio] Sfx Source is not assigned in the Inspector.");
             }
 
             else
@@ -155,6 +155,13 @@ namespace ModularAds.Scripts.Core.Audio
 
                 _channelMap.TryAdd(channel.channel, channel);
             }
+        }
+
+        private void SetVolume()
+        {
+            _masterVolume = InitialVolume;
+            _musicVolume = InitialVolume;
+            _sfxVolume = InitialVolume;
         }
 
         #endregion

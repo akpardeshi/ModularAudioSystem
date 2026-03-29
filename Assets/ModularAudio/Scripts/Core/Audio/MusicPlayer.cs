@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ModularAds.Scripts.Core.Audio
+namespace ModularAudio.Scripts
 {
     public class MusicPlayer : AudioPlayerBase, IAudioControllable
     {

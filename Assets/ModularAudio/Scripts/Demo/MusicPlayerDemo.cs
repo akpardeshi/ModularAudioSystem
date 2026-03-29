@@ -1,8 +1,7 @@
-using ModularAds.Core.Scripts.ScriptableEventChannels;
-using ModularAds.Scripts.Core.Audio;
+using ModularAudio.Scripts;
 using UnityEngine;
 
-namespace ModularAds.Scripts.Demo
+namespace ModularAudio.Demo
 {
     public class MusicPlayerDemo : MonoBehaviour, IAudioPlayable
     {
@@ -15,19 +14,35 @@ namespace ModularAds.Scripts.Demo
             if (!AudioEventChannelSo)
             {
                 Debug.LogWarning("AudioEventChannelSo is not set", gameObject);
+                return;
             }
-            
+
             AudioEventChannelSo.RaiseEvent(audioClip);
         }
 
         public void PlayAudio1()
         {
-            PlayAudio(clips[0]);
+            PlayAudioAtIndex(0);
         }
 
         public void PlayAudio2()
         {
-            PlayAudio(clips[1]);
+            PlayAudioAtIndex(1);
+        }
+        
+        private void PlayAudioAtIndex(int index)
+        {
+            if (clips == null || index < 0 || index >= clips.Length)
+            {
+                Debug.LogError($"The audio clip with Index {index} does not exist");
+                return;
+            }
+
+            var clip = clips[index];
+            if (clip)
+            {
+                PlayAudio(clip);
+            }
         }
     }
 }

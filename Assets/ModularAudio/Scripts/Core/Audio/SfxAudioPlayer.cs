@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ModularAds.Scripts.Core.Audio
+namespace ModularAudio.Scripts
 {
     public class SfxAudioPlayer : AudioPlayerBase, IAudioControllable
     {
@@ -11,7 +11,7 @@ namespace ModularAds.Scripts.Core.Audio
 
         public void StopAudio()
         {
-            
+            AudioSource.Stop();
         }
     }
 }
