@@ -1,7 +1,7 @@
 using ModularAudio.Scripts;
 using UnityEngine;
 
-namespace ModularAds.Scripts.Demo
+namespace ModularAudio.Demo
 {
     public class SfxPlayerDemo : MonoBehaviour, IAudioPlayable
     {
@@ -9,7 +9,7 @@ namespace ModularAds.Scripts.Demo
 
         [field: SerializeField] public AudioEventChannelSo AudioEventChannelSo { get; private set; }
 
-        public void PlayAudio(AudioClip audioClip)
+        public void PlayAudio(AudioClip audioClip, float audioVolume = 1.0f)
         {
             if (!AudioEventChannelSo)
             {
@@ -17,7 +17,7 @@ namespace ModularAds.Scripts.Demo
                 return;
             }
 
-            AudioEventChannelSo.RaiseEvent(audioClip);
+            AudioEventChannelSo.RaiseEvent(audioClip, audioVolume);
         }
 
         public void PlayAudio1()

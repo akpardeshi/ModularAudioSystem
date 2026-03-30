@@ -4,14 +4,14 @@ namespace ModularAudio.Scripts
 {
     public class SfxAudioPlayer : AudioPlayerBase, IAudioControllable
     {
-        public void PlayAudio(AudioClip clip)
+        public void PlayAudio(AudioClip clip, float volume = 1.0f)
         {
-            AudioSource.PlayOneShot(clip);
+            AudioSource.PlayOneShot(clip, volume);
         }
 
         public void StopAudio()
         {
-            AudioSource.Stop();
+            Debug.LogWarning("[SfxAudioPlayer] StopAudio is not supported for SFX. Use MusicPlayer for controllable audio playback.");
         }
     }
 }

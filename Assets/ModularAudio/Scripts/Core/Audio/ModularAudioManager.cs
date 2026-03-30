@@ -1,23 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Audio;
 
 namespace ModularAudio.Scripts
 {
     public class ModularAudioManager : MonoBehaviour
     {
-        #region Enums
-
-        public enum AudioMixerNames
-        {
-            MasterVolume = 0,
-            MusicVolume = 1,
-            SfxVolume = 2
-        }
-
-        #endregion
-
-
         #region Variables
 
         [Header("Event Channels"), SerializeField]
@@ -60,6 +49,12 @@ namespace ModularAudio.Scripts
         // channel mapping
         private readonly Dictionary<AudioMixerNames, AudioMixerChannelSo> _channelMap = new();
 
+        [Header("Audio Sliders"), SerializeField]
+        private Slider masterVolumeSlider;
+
+        [SerializeField] private Slider musicVolumeSlider;
+        [SerializeField] private Slider sfxVolumeSlider;
+
         #endregion
 
 
@@ -83,10 +78,37 @@ namespace ModularAudio.Scripts
             InitializeAudioChannels();
             Initialize();
             SetVolume();
-            
-            SetChannelVolume(AudioMixerNames.MasterVolume, InitialVolume);
-            SetChannelVolume(AudioMixerNames.MusicVolume, InitialVolume);
-            SetChannelVolume(AudioMixerNames.SfxVolume, InitialVolume);
+
+            SetChannelVolume(AudioMixerNames.MasterVolume, _masterVolume);
+            SetChannelVolume(AudioMixerNames.MusicVolume, _musicVolume);
+            SetChannelVolume(AudioMixerNames.SfxVolume, _sfxVolume);
+
+            if (masterVolumeSlider)
+            {
+                masterVolumeSlider.SetValueWithoutNotify(_masterVolume);
+            }
+            else
+            {
+                Debug.LogWarning($"Please assign the master volume slider");
+            }
+
+            if (musicVolumeSlider)
+            {
+                musicVolumeSlider.SetValueWithoutNotify(_musicVolume);
+            }
+            else
+            {
+                Debug.LogWarning($"Please assign the music volume slider");
+            }
+
+            if (sfxVolumeSlider)
+            {
+                sfxVolumeSlider.SetValueWithoutNotify(_sfxVolume);
+            }
+            else
+            {
+                Debug.LogWarning($"Please assign the sfx volume slider");
+            }
         }
 
         private void OnDisable()
@@ -107,14 +129,14 @@ namespace ModularAudio.Scripts
 
         #region Event Handlers
 
-        private void OnPlayMusicEventRaised(AudioClip audioClip)
+        private void OnPlayMusicEventRaised(AudioClip audioClip, float volume)
         {
-            _musicPlayer.PlayAudio(audioClip);
+            _musicPlayer.PlayAudio(audioClip, volume);
         }
 
-        private void OnPlaySfxEventRaised(AudioClip audioClip)
+        private void OnPlaySfxEventRaised(AudioClip audioClip, float volume)
         {
-            _sfxPlayer.PlayAudio(audioClip);
+            _sfxPlayer.PlayAudio(audioClip, volume);
         }
 
         #endregion

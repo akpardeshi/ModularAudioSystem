@@ -9,7 +9,7 @@ namespace ModularAudio.Demo
 
         [field: SerializeField] public AudioEventChannelSo AudioEventChannelSo { get; private set; }
 
-        public void PlayAudio(AudioClip audioClip)
+        public void PlayAudio(AudioClip audioClip, float audioVolume = 1.0f)
         {
             if (!AudioEventChannelSo)
             {
@@ -17,7 +17,7 @@ namespace ModularAudio.Demo
                 return;
             }
 
-            AudioEventChannelSo.RaiseEvent(audioClip);
+            AudioEventChannelSo.RaiseEvent(audioClip, audioVolume);
         }
 
         public void PlayAudio1()
@@ -41,7 +41,7 @@ namespace ModularAudio.Demo
             var clip = clips[index];
             if (clip)
             {
-                PlayAudio(clip);
+                PlayAudio(clip, 1.0f);
             }
         }
     }

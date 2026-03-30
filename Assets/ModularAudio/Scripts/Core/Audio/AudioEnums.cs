@@ -1,5 +1,3 @@
-#region Enums
-
 namespace ModularAudio.Scripts
 {
     public enum AudioMixerNames
@@ -8,6 +6,4 @@ namespace ModularAudio.Scripts
         MusicVolume = 1,
         SfxVolume = 2
     }
-
-    #endregion
 }

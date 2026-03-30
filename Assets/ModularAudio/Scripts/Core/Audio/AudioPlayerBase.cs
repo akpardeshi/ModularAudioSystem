@@ -9,7 +9,7 @@ namespace ModularAudio.Scripts
 
         public void Initialize(AudioSource source)
         {
-            if (!AudioSource)
+            if (!source)
             {
                 Debug.LogError("[AudioPlayerBase] AudioSource cannot be null.");
                 return;

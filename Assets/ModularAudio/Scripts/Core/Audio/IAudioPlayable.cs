@@ -6,6 +6,6 @@ namespace ModularAudio.Scripts
     {
         AudioEventChannelSo AudioEventChannelSo { get; }
 
-        void PlayAudio(AudioClip clip);
+        void PlayAudio(AudioClip clip, float audioVolume);
     }
 }

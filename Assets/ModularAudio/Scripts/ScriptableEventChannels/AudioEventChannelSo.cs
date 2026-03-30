@@ -6,14 +6,15 @@ namespace ModularAudio.Scripts
     [CreateAssetMenu(fileName = "AudioEventChannelSO", menuName = "Scriptable Objects/AudioEventChannelSO")]
     public class AudioEventChannelSo : ScriptableObject
     {
-        private Action<AudioClip> _onEventRaised;
-        
-        public event Action<AudioClip> OnEventRaised
+        private Action<AudioClip, float> _onEventRaised;
+
+        public event Action<AudioClip, float> OnEventRaised
         {
-            add    => _onEventRaised += value;
+            add => _onEventRaised += value;
             remove => _onEventRaised -= value;
         }
-        public void RaiseEvent(AudioClip clip)
+
+        public void RaiseEvent(AudioClip clip, float volume)
         {
             if (clip == null)
             {
@@ -21,7 +22,7 @@ namespace ModularAudio.Scripts
                 return;
             }
 
-            _onEventRaised?.Invoke(clip);
+            _onEventRaised?.Invoke(clip, volume);
         }
     }
 }
