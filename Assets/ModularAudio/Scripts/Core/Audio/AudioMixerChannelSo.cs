@@ -11,5 +11,8 @@ namespace ModularAudio.Scripts
         [Header("Mixer Binding")]
         [Tooltip("Exact exposed parameter name in AudioMixer")]
         public string volumeParameter;
+        
+        [Range(0f, 1f)]
+        public float defaultVolume = 1f;
     }
 }

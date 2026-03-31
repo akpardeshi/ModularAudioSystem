@@ -12,12 +12,18 @@ namespace ModularAudio.Scripts
                 return;
             }
 
-            if (clip == AudioSource.clip)
+            if (!AudioSource.clip)
             {
                 Debug.LogWarning($"There is no audio clip  assigned to music player.");
                 return;
             }
 
+            if (clip == AudioSource.clip)
+            {
+                Debug.LogWarning($"[MusicPlayer] Clip is already playing — skipping.");
+                return;
+            }
+            
             StopAudio();
             
             AudioSource.volume = volume;

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   channel: 1
   volumeParameter: MusicVolume
-  defaultVolume: 1
+  defaultVolume: 0.7

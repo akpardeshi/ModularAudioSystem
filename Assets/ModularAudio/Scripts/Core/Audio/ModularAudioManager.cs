@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using EventChannel.Scripts;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Audio;
 
 namespace ModularAudio.Scripts
@@ -30,11 +30,8 @@ namespace ModularAudio.Scripts
         private SfxAudioPlayer _sfxPlayer;
 
         // Interfaces
-        public IAudioControllable MusicPlayer => _musicPlayer;
-        public IAudioControllable SfxPlayer => _sfxPlayer;
-
-        // Initial Volume
-        private const float InitialVolume = 0.7f;
+        private IAudioControllable MusicPlayer => _musicPlayer;
+        private IAudioControllable SfxPlayer => _sfxPlayer;
 
         // volume parameters
         private float _musicVolume;
@@ -48,80 +45,32 @@ namespace ModularAudio.Scripts
 
         // channel mapping
         private readonly Dictionary<AudioMixerNames, AudioMixerChannelSo> _channelMap = new();
-
-        [Header("Audio Sliders"), SerializeField]
-        private Slider masterVolumeSlider;
-
-        [SerializeField] private Slider musicVolumeSlider;
-        [SerializeField] private Slider sfxVolumeSlider;
+        
+        // event channels
+        [Header("Volume Event Channels"), SerializeField]
+        private FloatEventChannel masterVolumeEventChannel;
+        [SerializeField] private FloatEventChannel musicVolumeEventChannel;
+        [SerializeField] private FloatEventChannel sfxVolumeEventChannel;
 
         #endregion
 
 
         #region Event Functions
-
-        private void OnEnable()
-        {
-            if (musicEventChannelSo)
-            {
-                musicEventChannelSo.OnEventRaised += OnPlayMusicEventRaised;
-            }
-
-            if (sfxEventChannelSo)
-            {
-                sfxEventChannelSo.OnEventRaised += OnPlaySfxEventRaised;
-            }
-        }
-
+        
         void Awake()
         {
             InitializeAudioChannels();
             Initialize();
-            SetVolume();
+        }
 
-            SetChannelVolume(AudioMixerNames.MasterVolume, _masterVolume);
-            SetChannelVolume(AudioMixerNames.MusicVolume, _musicVolume);
-            SetChannelVolume(AudioMixerNames.SfxVolume, _sfxVolume);
-
-            if (masterVolumeSlider)
-            {
-                masterVolumeSlider.SetValueWithoutNotify(_masterVolume);
-            }
-            else
-            {
-                Debug.LogWarning($"Please assign the master volume slider");
-            }
-
-            if (musicVolumeSlider)
-            {
-                musicVolumeSlider.SetValueWithoutNotify(_musicVolume);
-            }
-            else
-            {
-                Debug.LogWarning($"Please assign the music volume slider");
-            }
-
-            if (sfxVolumeSlider)
-            {
-                sfxVolumeSlider.SetValueWithoutNotify(_sfxVolume);
-            }
-            else
-            {
-                Debug.LogWarning($"Please assign the sfx volume slider");
-            }
+        private void OnEnable()
+        {
+            SubscribeToEvents();
         }
 
         private void OnDisable()
         {
-            if (musicEventChannelSo)
-            {
-                musicEventChannelSo.OnEventRaised -= OnPlayMusicEventRaised;
-            }
-
-            if (sfxEventChannelSo)
-            {
-                sfxEventChannelSo.OnEventRaised -= OnPlaySfxEventRaised;
-            }
+            UnsubscribeToEvents();
         }
 
         #endregion
@@ -129,14 +78,120 @@ namespace ModularAudio.Scripts
 
         #region Event Handlers
 
-        private void OnPlayMusicEventRaised(AudioClip audioClip, float volume)
+        private void OnPlayMusicEventRaised(AudioWrapper wrapper)
         {
-            _musicPlayer.PlayAudio(audioClip, volume);
+            MusicPlayer.PlayAudio(wrapper.clip, wrapper.volume);
         }
 
-        private void OnPlaySfxEventRaised(AudioClip audioClip, float volume)
+        private void OnPlaySfxEventRaised(AudioWrapper wrapper)
         {
-            _sfxPlayer.PlayAudio(audioClip, volume);
+            SfxPlayer.PlayAudio(wrapper.clip, wrapper.volume);
+        }
+        
+        private void SubscribeToEvents()
+        {
+            if (masterVolumeEventChannel)
+            {
+                masterVolumeEventChannel.OnEventRaised += SetMasterVolume;
+            }
+
+            else
+            {
+                Debug.LogWarning($"[Audio] Master Volume is not assigned in the Inspector.");
+            }
+            
+            if (musicVolumeEventChannel)
+            {
+                musicVolumeEventChannel.OnEventRaised += SetMusicVolume;
+            }
+
+            else
+            {
+                Debug.LogWarning($"[Audio] Music Volume is not assigned in the Inspector.");
+            }
+            
+            if (sfxVolumeEventChannel)
+            {
+                sfxVolumeEventChannel.OnEventRaised += SetSfxVolume;
+            }
+
+            else
+            {
+                Debug.LogWarning($"[Audio] SFX Volume is not assigned in the Inspector.");
+            }
+            
+            if (musicEventChannelSo)
+            {
+                musicEventChannelSo.OnEventRaised += OnPlayMusicEventRaised;
+            }
+
+            else
+            {
+                Debug.LogWarning($"[Audio] MusicEventChannelSo is not assigned in the Inspector.");
+            }
+
+            if (sfxEventChannelSo)
+            {
+                sfxEventChannelSo.OnEventRaised += OnPlaySfxEventRaised;
+            }
+            
+            else
+            {
+                Debug.LogWarning($"[Audio] sfxEventChannelSo is not assigned in the Inspector.");
+            }
+        }
+        
+        private void UnsubscribeToEvents()
+        {
+            if (masterVolumeEventChannel)
+            {
+                masterVolumeEventChannel.OnEventRaised -= SetMasterVolume;
+            }
+
+            else
+            {
+                Debug.LogWarning($"[Audio] Master Volume is not assigned in the Inspector.");
+            }
+            
+            if (musicVolumeEventChannel)
+            {
+                musicVolumeEventChannel.OnEventRaised -= SetMusicVolume;
+            }
+
+            else
+            {
+                Debug.LogWarning($"[Audio] Music Volume is not assigned in the Inspector.");
+            }
+            
+            if (sfxVolumeEventChannel)
+            {
+                sfxVolumeEventChannel.OnEventRaised -= SetSfxVolume;
+            }
+
+            else
+            {
+                Debug.LogWarning($"[Audio] SFX Volume is not assigned in the Inspector.");
+            }
+            
+            if (musicEventChannelSo)
+            {
+                musicEventChannelSo.OnEventRaised -= OnPlayMusicEventRaised;
+            }
+
+            else
+            {
+                Debug.LogWarning($"[Audio] MusicEventChannelSo is not assigned in the Inspector.");
+            }
+
+            if (sfxEventChannelSo)
+            {
+                sfxEventChannelSo.OnEventRaised -= OnPlaySfxEventRaised;
+            }
+            
+            else
+            {
+                Debug.LogWarning($"[Audio] sfxEventChannelSo is not assigned in the Inspector.");
+            }
         }
 
         #endregion
@@ -177,13 +232,6 @@ namespace ModularAudio.Scripts
 
                 _channelMap.TryAdd(channel.channel, channel);
             }
-        }
-
-        private void SetVolume()
-        {
-            _masterVolume = InitialVolume;
-            _musicVolume = InitialVolume;
-            _sfxVolume = InitialVolume;
         }
 
         #endregion
@@ -237,19 +285,19 @@ namespace ModularAudio.Scripts
 
         #region UI Functions
 
-        public void SetMasterVolume(float sliderValue)
+        private void SetMasterVolume(float sliderValue)
         {
             _masterVolume = sliderValue;
             ApplyMasterVolume();
         }
 
-        public void SetMusicVolume(float sliderValue)
+        private void SetMusicVolume(float sliderValue)
         {
             _musicVolume = sliderValue;
             ApplyMusicVolume();
         }
 
-        public void SetSfxVolume(float sliderValue)
+        private void SetSfxVolume(float sliderValue)
         {
             _sfxVolume = sliderValue;
             ApplySfxVolume();

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   channel: 0
   volumeParameter: MasterVolume
-  defaultVolume: 1
+  defaultVolume: 0.7

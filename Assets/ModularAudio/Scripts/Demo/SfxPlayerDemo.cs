@@ -17,7 +17,8 @@ namespace ModularAudio.Demo
                 return;
             }
 
-            AudioEventChannelSo.RaiseEvent(audioClip, audioVolume);
+            AudioWrapper audioWrapper = new(audioClip, audioVolume);
+            AudioEventChannelSo.RaiseEvent(audioWrapper);
         }
 
         public void PlayAudio1()

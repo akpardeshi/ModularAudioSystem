@@ -1,28 +1,29 @@
 using System;
+using EventChannel.Scripts;
 using UnityEngine;
 
 namespace ModularAudio.Scripts
 {
     [CreateAssetMenu(fileName = "AudioEventChannelSO", menuName = "Scriptable Objects/AudioEventChannelSO")]
-    public class AudioEventChannelSo : ScriptableObject
+    public class AudioEventChannelSo : ScriptableEventChannelBase<AudioWrapper>
     {
-        private Action<AudioClip, float> _onEventRaised;
+        private Action<AudioWrapper> _onEventRaised;
 
-        public event Action<AudioClip, float> OnEventRaised
+        public event Action<AudioWrapper> OnEventRaised
         {
             add => _onEventRaised += value;
             remove => _onEventRaised -= value;
         }
 
-        public void RaiseEvent(AudioClip clip, float volume)
+        public void RaiseEvent(AudioWrapper wrapper)
         {
-            if (clip == null)
+            if (wrapper.clip == null)
             {
                 Debug.LogWarning("[Audio] Play event raised with null clip.");
                 return;
             }
 
-            _onEventRaised?.Invoke(clip, volume);
+            _onEventRaised?.Invoke(wrapper);
         }
     }
 }
